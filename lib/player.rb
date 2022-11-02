@@ -35,7 +35,14 @@ class Player
   end
 
   def random
-    DIRECTIONS.shuffle.detect{|d| available?(send(d)) }
+    DIRECTIONS.shuffle.detect do |d|
+      answer = available?(send(d))
+
+      logger.info("AVAILABLE? #{d}, #{send(d).inspect}, #{answer.inspect}")
+
+      answer
+    end
+
     'down'
   end
 
