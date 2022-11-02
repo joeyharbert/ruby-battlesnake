@@ -19,10 +19,19 @@ class Player
   private
 
   def find_empty
-    return random if direction.nil?
-    return random if !available?(send(direction))
+    candidate = send(direction)
+    logger.info("CANDIDATE: #{candidate.inspect}")
 
-    send(direction)
+    if direction.nil?
+      logger.info("DIRECTION NIL!")
+      random
+    elsif !available?(candidate)
+      logger.info("DIRECTION #{direction.inspect} not available!")
+      random
+    else
+      logger.info("AVAILABLE!")
+      candidate
+    end
   end
 
   def random
