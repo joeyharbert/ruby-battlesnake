@@ -1,5 +1,5 @@
 class Player
-  attr_reader :data, :board, :player, :occupieds, :logger
+  attr_reader :data, :board, :player, :occupieds, :foods, :logger
 
   DIRECTIONS = ['up', 'down', 'left', 'right']
 
@@ -8,12 +8,13 @@ class Player
     @board = data['board']
     @player = data['you']
 
+    @foods = @board['food']
     @occupieds = @board['snakes'].map{|s| s['body']}.flatten
     @logger = logger
   end
 
   def move
-    find_empty
+    nearby_food || find_empty
   end
 
   private
@@ -34,6 +35,35 @@ class Player
     end
   end
 
+  def direction_of(from_coords, to_coords)
+    delta_x = to_coords['x'] - from_coords['x']
+    delta_y = to_coords['y'] - from_coords['y']
+
+    if delta_x.abs >= delta_y.abs
+      # mostly horizontal
+      delta_x > 0 ? 'right' : 'left'
+    else
+      # mostly vertical
+      delta_y > 0 ? 'up' : 'down'
+    end
+  end
+
+  def nearby_food
+    coords = DIRECTIONS.shuffle.detect do |d|
+      answer = food?(send(d))
+
+      logger.info("FOOD? #{d}, #{send(d).inspect}, #{answer.inspect}")
+
+      answer
+    end
+
+    coords ? direction_of(head, coords) : nil
+  end
+
+  def food?(coords)
+    foods.include?(coords)
+  end
+
   def random
     DIRECTIONS.shuffle.detect do |d|
       answer = available?(send(d))
@@ -46,19 +76,7 @@ class Player
 
   def direction
     return @direction if defined?(@direction)
-    return @direction = nil unless neck
-
-    @direction = if neck == left
-      'right'
-    elsif neck == right
-      'left'
-    elsif neck == down
-      'up'
-    elsif neck == up
-      'down'
-    else
-      raise "no valid direction!!!"
-    end
+    @direction = neck ? direction_of(neck, head) : nil
   end
 
   def left
