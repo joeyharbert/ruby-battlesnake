@@ -49,15 +49,13 @@ class Player
   end
 
   def nearby_food
-    coords = DIRECTIONS.shuffle.detect do |d|
+    DIRECTIONS.shuffle.detect do |d|
       answer = food?(send(d))
 
       logger.info("FOOD? #{d}, #{send(d).inspect}, #{answer.inspect}")
 
       answer
     end
-
-    coords ? direction_of(head, coords) : nil
   end
 
   def food?(coords)
