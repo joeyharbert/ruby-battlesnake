@@ -41,9 +41,7 @@ class Player
       logger.info("AVAILABLE? #{d}, #{send(d).inspect}, #{answer.inspect}")
 
       answer
-    end
-
-    'down'
+    end || 'down'
   end
 
   def direction
