@@ -70,7 +70,7 @@ class Player
   end
 
   def wall?(coords)
-    logger("WALL? #{coords.inspect}, #{board['width'].inspect},#{board['height'].inspect}")
+    logger.info("WALL? #{coords.inspect}, #{board['width'].inspect},#{board['height'].inspect}")
     coords['x'] < 0 || coords['y'] < 0 || coords['x'] >= board['width'] || coords['y'] >= board['height']
   end
 
