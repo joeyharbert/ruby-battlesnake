@@ -25,7 +25,7 @@ class Player
   end
 
   def random
-    DIRECTIONS.shuffle.detect{|d| !occupied?(send(d)) }
+    DIRECTIONS.shuffle.detect{|d| available?(send(d)) }
     'down'
   end
 
