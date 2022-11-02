@@ -9,6 +9,7 @@ class Player
     @player = data['you']
 
     @occupieds = @board['snakes'].map{|s| s['body']}.flatten
+    @logger = logger
   end
 
   def move
