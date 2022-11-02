@@ -144,4 +144,5 @@ class Player
   def width
     return @width if defined?(@width)
     @width = board['width']
+  end
 end
