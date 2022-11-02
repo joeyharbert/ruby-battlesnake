@@ -27,6 +27,8 @@ post '/start' do
 end
 
 post '/move' do
+  logger.info "MOVE: #{request_body.inspect}"
+
   content_type :json
 
   {
