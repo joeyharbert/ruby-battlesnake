@@ -1,9 +1,9 @@
 class Player
-  attr_reader :data, :board, :player, :occupieds
+  attr_reader :data, :board, :player, :occupieds, :logger
 
   DIRECTIONS = ['up', 'down', 'left', 'right']
 
-  def initialize(data)
+  def initialize(data, logger)
     @data = data
     @board = data['board']
     @player = data['you']
@@ -70,6 +70,7 @@ class Player
   end
 
   def wall?(coords)
+    logger("WALL? #{coords.inspect}, #{board['width'].inspect},#{board['height'].inspect}")
     coords['x'] < 0 || coords['y'] < 0 || coords['x'] >= board['width'] || coords['y'] >= board['height']
   end
 
