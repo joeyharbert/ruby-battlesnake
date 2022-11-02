@@ -45,9 +45,6 @@ private
 helpers do
   def request_body
     return @request_body if defined?(@request_body)
-    data = request.body.read
-    puts "DATA: #{data.inspect}"
-    $stderr.puts "BODY: #{@request_body.inspect}"
-    @request_body = JSON.parse(data)
+    @request_body = JSON.parse(request.body.read)
   end
 end
