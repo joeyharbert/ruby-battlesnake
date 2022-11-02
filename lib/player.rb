@@ -19,7 +19,8 @@ class Player
   private
 
   def find_empty
-    random if direction.nil? || !available?(send(direction))
+    return random if direction.nil?
+    return random if !available?(send(direction))
 
     send(direction)
   end
