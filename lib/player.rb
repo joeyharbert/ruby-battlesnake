@@ -14,7 +14,7 @@ class Player
   end
 
   def move
-    nearby_food || find_empty
+    nearby_food || nearest_available_wall || find_empty
   end
 
   private
@@ -55,6 +55,25 @@ class Player
       logger.info("FOOD? #{d}, #{send(d).inspect}, #{answer.inspect}")
 
       answer
+    end
+  end
+
+  def nearest_available_wall
+    DIRECTIONS.select{ |d| available?(send(d)) }.min_by do |d|
+      distance_to_wall(d)
+    end
+  end
+
+  def distance_to_wall(d)
+    case d
+    when 'up'
+      height - 1 - head['y']
+    when 'down'
+      head['y']
+    when 'right'
+      width - 1 - head['x']
+    when 'left'
+      head['x']
     end
   end
 
@@ -102,8 +121,8 @@ class Player
   end
 
   def wall?(coords)
-    answer = coords['x'] < 0 || coords['y'] < 0 || coords['x'] >= board['width'] || coords['y'] >= board['height']
-    logger.info("WALL? #{coords.inspect}, #{board['width'].inspect},#{board['height'].inspect}: #{answer.inspect}")
+    answer = coords['x'] < 0 || coords['y'] < 0 || coords['x'] >= width || coords['y'] >= height
+    logger.info("WALL? #{coords.inspect}, #{width.inspect},#{height.inspect}: #{answer.inspect}")
     answer
   end
 
@@ -116,4 +135,13 @@ class Player
     return @neck if defined?(@neck)
     @neck = player['body'][1]
   end
+
+  def height
+    return @height if defined?(@height)
+    @height = board['height']
+  end
+
+  def width
+    return @width if defined?(@width)
+    @width = board['width']
 end
