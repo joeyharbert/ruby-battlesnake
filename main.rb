@@ -8,6 +8,8 @@ set :bind, '0.0.0.0'
 set :port, 80
 
 get '/' do
+  logger.info "INDEX: #{request_body.inspect}"
+
   content_type :json
 
   {
@@ -21,6 +23,8 @@ get '/' do
 end
 
 post '/start' do
+  logger.info "START: #{request_body.inspect}"
+
   content_type :json
 
   {}.to_json
@@ -37,6 +41,8 @@ post '/move' do
 end
 
 post '/end' do
+  logger.info "END: #{request_body.inspect}"
+
   content_type :json
 
   {}.to_json
