@@ -21,7 +21,7 @@ get '/' do
 end
 
 post '/start' do
-  log "START: #{request_body.inspect}"
+  log(:start)
 
   content_type :json
 
@@ -29,7 +29,7 @@ post '/start' do
 end
 
 post '/move' do
-  log "MOVE: #{request_body.inspect}"
+  log(:move)
 
   content_type :json
 
@@ -39,7 +39,7 @@ post '/move' do
 end
 
 post '/end' do
-  log "END: #{request_body.inspect}"
+  log(:end)
 
   content_type :json
 
@@ -49,9 +49,14 @@ end
 private
 
 helpers do
-  def log(message)
-    logger.info(message)
-    File.open('./log.txt', 'a'){ |f| f.puts message }
+  def log(label)
+    logger.info("#{label.to_s.upcase}: #{request_body.inspect}")
+
+    Dir.mkdir('log') unless Dir.exist?(log)
+
+    File.open("./log/#{request_body['game']['id']}.txt", 'a') do |f|
+      f.puts request_body.inspect
+    end
   end
 
   def request_body
