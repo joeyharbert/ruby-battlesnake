@@ -21,18 +21,8 @@ class Player
 
   def find_empty
     candidate = send(direction)
-    logger.info("CANDIDATE: #{candidate.inspect}")
 
-    if direction.nil?
-      logger.info("DIRECTION NIL!")
-      random
-    elsif !available?(candidate)
-      logger.info("DIRECTION #{direction.inspect} not available!")
-      random
-    else
-      logger.info("AVAILABLE!")
-      candidate
-    end
+    direction.nil? || !available?(candidate) ? random : candidate
   end
 
   def direction_of(from_coords, to_coords)
@@ -50,11 +40,7 @@ class Player
 
   def nearby_food
     DIRECTIONS.shuffle.detect do |d|
-      answer = food?(send(d))
-
-      logger.info("FOOD? #{d}, #{send(d).inspect}, #{answer.inspect}")
-
-      answer
+      food?(send(d))
     end
   end
 
@@ -82,13 +68,7 @@ class Player
   end
 
   def random
-    DIRECTIONS.shuffle.detect do |d|
-      answer = available?(send(d))
-
-      logger.info("AVAILABLE? #{d}, #{send(d).inspect}, #{answer.inspect}")
-
-      answer
-    end || 'down'
+    DIRECTIONS.shuffle.detect{ |d| available?(send(d)) } || 'down'
   end
 
   def direction
@@ -121,9 +101,7 @@ class Player
   end
 
   def wall?(coords)
-    answer = coords['x'] < 0 || coords['y'] < 0 || coords['x'] >= width || coords['y'] >= height
-    logger.info("WALL? #{coords.inspect}, #{width.inspect},#{height.inspect}: #{answer.inspect}")
-    answer
+    coords['x'] < 0 || coords['y'] < 0 || coords['x'] >= width || coords['y'] >= height
   end
 
   def head
