@@ -21,7 +21,7 @@ get '/' do
 end
 
 post '/start' do
-  logger.info "START: #{request_body.inspect}"
+  log "START: #{request_body.inspect}"
 
   content_type :json
 
@@ -29,7 +29,7 @@ post '/start' do
 end
 
 post '/move' do
-  logger.info "MOVE: #{request_body.inspect}"
+  log "MOVE: #{request_body.inspect}"
 
   content_type :json
 
@@ -39,7 +39,7 @@ post '/move' do
 end
 
 post '/end' do
-  logger.info "END: #{request_body.inspect}"
+  log "END: #{request_body.inspect}"
 
   content_type :json
 
