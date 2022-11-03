@@ -52,7 +52,7 @@ helpers do
   def log(label)
     logger.info("#{label.to_s.upcase}: #{request_body.inspect}")
 
-    Dir.mkdir('log') unless Dir.exist?(log)
+    Dir.mkdir('./log') unless Dir.exist?('./log')
 
     File.open("./log/#{request_body['game']['id']}.txt", 'a') do |f|
       f.puts request_body.inspect
