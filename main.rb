@@ -49,6 +49,11 @@ end
 private
 
 helpers do
+  def log(message)
+    logger.info(message)
+    File.open('./log.txt', 'a'){ |f| f.puts message }
+  end
+
   def request_body
     return @request_body if defined?(@request_body)
     @request_body = JSON.parse(request.body.read)
