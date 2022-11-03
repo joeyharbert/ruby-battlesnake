@@ -53,14 +53,18 @@ helpers do
     logger.info("#{label.to_s.upcase}: #{request_body.inspect}")
 
     Dir.mkdir('./log') unless Dir.exist?('./log')
+    filename = "./log/#{request_body['game']['id']}.jsonl"
 
-    File.open("./log/#{request_body['game']['id']}.txt", 'a') do |f|
-      f.puts request_body.inspect
-    end
+    File.open(filename, 'a'){ |f| f.puts json_body }
   end
 
   def request_body
     return @request_body if defined?(@request_body)
-    @request_body = JSON.parse(request.body.read)
+    @request_body = JSON.parse(json_body)
+  end
+
+  def json_body
+    return @json_body if defined?(@json_body)
+    @json_body = request.body.read
   end
 end
