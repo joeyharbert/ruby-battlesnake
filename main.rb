@@ -8,8 +8,6 @@ set :bind, '0.0.0.0'
 set :port, 80
 
 get '/' do
-  logger.info "INDEX: #{request_body.inspect}"
-
   content_type :json
 
   {
