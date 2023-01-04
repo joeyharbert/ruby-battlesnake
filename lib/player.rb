@@ -21,7 +21,7 @@ class Player
   end
 
   def move
-    adjacent_tail(player) || nearby_food || find_empty
+    nearby_food || adjacent_tail(player) || find_empty
   end
 
   private
