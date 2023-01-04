@@ -35,7 +35,7 @@ class Player
     tail = snake.body.last
 
     directions_to_locations(player.head, Battlesnake::Location::DIRECTIONS).detect do |location|
-      location == tail
+      location.as_json == tail.as_json
     end
   end
 
