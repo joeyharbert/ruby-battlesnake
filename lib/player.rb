@@ -1,5 +1,8 @@
 require 'battlesnake'
 
+# TODO: flood fill
+# TODO: prefer your own tail if it's adjacent to head
+
 class Player
   attr_reader :data, :board, :player, :logger
 
@@ -14,7 +17,7 @@ class Player
   end
 
   def move
-    nearby_food || find_empty
+    adjacent_tail(player) || nearby_food || find_empty
   end
 
   private
@@ -26,6 +29,14 @@ class Player
 
   def random_directions
     available_directions.shuffle
+  end
+
+  def adjacent_tail(snake)
+    tail = snake.body.last
+
+    directions_to_locations(player.head, Battlesnake::Location::DIRECTIONS).detect do |location|
+      location == tail
+    end
   end
 
   def nearby_food
@@ -43,9 +54,24 @@ class Player
     path[0].direction(path[1])
   end
 
+  def direction_to_location(location, direction)
+    location.move(direction)
+  end
+
+  def directions_to_locations(location, directions)
+    directions.map{ |d| direction_to_location(location, d) }
+  end
+
   def find_empty
     random_directions.first
   end
+
+  # def find_most_empty
+  #   locations = available_directions
+  #   available_directions.max_by do |direction|
+  #
+  #   end
+  # end
 
   # def nearest_available_wall
   #   DIRECTIONS.select{ |d| available?(send(d)) }.min_by do |d|
