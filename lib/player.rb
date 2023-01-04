@@ -36,7 +36,7 @@ class Player
   end
 
   def adjacent_tail(snake)
-    return nil if snake.body.size < 3
+    return nil if snake.body.size < 4
     tail = snake.body.last
 
     locations = directions_to_locations(player.head, Battlesnake::Location::DIRECTIONS)
