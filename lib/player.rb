@@ -1,7 +1,11 @@
 require 'battlesnake'
 
-# TODO: flood fill
-# TODO: prefer your own tail if it's adjacent to head
+# TODO:
+# prefer your own tail if it's adjacent to head (not working)
+# flood fill
+# path find to own tail
+# path find to shorter snake's heads
+
 
 class Player
   attr_reader :data, :board, :player, :logger
@@ -32,20 +36,16 @@ class Player
   end
 
   def adjacent_tail(snake)
-    tail = snake.body.last
-
-    directions_to_locations(player.head, Battlesnake::Location::DIRECTIONS).detect do |location|
-      location.as_json == tail.as_json
-    end
+    direction_to(nearest_path_to(snake.body.last, max_distance: 2))
   end
 
   def nearby_food
     direction_to(nearest_path_to(board.food))
   end
 
-  def nearest_path_to(locations)
+  def nearest_path_to(locations, max_distance: MAX_PATH_DISTANCE)
     Array(locations).map do |location|
-      board.find_path(player.head, location, max_distance: MAX_PATH_DISTANCE)
+      board.find_path(player.head, location, max_distance: max_distance)
     end.compact.min_by(&:size)
   end
 
