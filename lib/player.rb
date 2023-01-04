@@ -28,7 +28,7 @@ class Player
   end
 
   def move
-    return @move of defined?(@move)
+    return @move if defined?(@move)
     @move = adjacent_food || nearby_food || adjacent_tail(player) || find_empty
   end
 
