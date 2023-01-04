@@ -33,9 +33,7 @@ post '/move' do
 
   content_type :json
 
-  {
-    move: Player.new(request_body, logger).move
-  }.to_json
+  Player.new(request_body, logger).play.to_json
 end
 
 post '/end' do

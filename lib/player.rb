@@ -20,8 +20,20 @@ class Player
     @logger = logger
   end
 
+  def play
+    {
+      move: move,
+      shout: shout
+    }
+  end
+
   def move
-    nearby_food || adjacent_tail(player) || find_empty
+    return @move of defined?(@move)
+    @move = adjacent_food || nearby_food || adjacent_tail(player) || find_empty
+  end
+
+  def shout
+    move == adjacent_food ? "chomp!" : ""
   end
 
   private
@@ -47,6 +59,11 @@ class Player
 
     return nil if location.nil?
     direction_to([snake.head, location])
+  end
+
+  def adjacent_food
+    return @adjacent_food if defined?(@adjacent_food)
+    @adjacent_food = direction_to(nearest_path_to(board.food, max_distance: 1))
   end
 
   def nearby_food
