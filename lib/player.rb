@@ -95,7 +95,7 @@ class Player
 
   def find_most_empty
     available_directions.max_by do |direction|
-      flood_fils(direction).size
+      flood_fills(direction).size
     end
   end
 

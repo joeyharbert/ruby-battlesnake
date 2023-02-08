@@ -56,7 +56,7 @@ helpers do
       response: response_body
     }.to_json
 
-    logger.info("#{label.to_s.upcase} is turtles: #{data}")
+    logger.info("#{label.to_s.upcase}: #{data}")
 
     Dir.mkdir('./log') unless Dir.exist?('./log')
     filename = "./log/#{request_body['game']['id']}.jsonl"
