@@ -100,7 +100,7 @@ class Player
   end
 
   def find_most_empty
-    fills = board.flood_fills(player.head)
+    fills = board.flood_fills(player.head, max: 10)
     logger.info("FILLS: #{fills.inspect}")
 
     fills.max_by{ |direction, spaces| spaces.size }.first
