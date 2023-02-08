@@ -94,9 +94,10 @@ class Player
   end
 
   def find_most_empty
-    available_directions.max_by do |direction|
-      flood_fills(direction).size
-    end
+    fills = flood_fills(snake.head)
+    logger.info("FILLS: #{fills.inspect}")
+
+    fills.max_by{ |direction, spaces| spaces.size }.first
   end
 
   # def nearest_available_wall
