@@ -21,39 +21,47 @@ get '/' do
 end
 
 post '/start' do
-  log(:start)
-
   content_type :json
 
-  {}.to_json
+  response = {}
+  log(:start, response)
+
+  response.to_json
 end
 
 post '/move' do
-  log(:move)
-
   content_type :json
 
-  Player.new(request_body, logger).play.to_json
+  response = Player.new(request_body, logger).play
+  log(:move, response)
+
+  response.to_json
 end
 
 post '/end' do
-  log(:end)
-
   content_type :json
 
-  {}.to_json
+  response = {}
+  log(:end, reponse)
+
+  response.to_json
 end
 
 private
 
 helpers do
-  def log(label)
-    logger.info("#{label.to_s.upcase}: #{request_body.inspect}")
+  def log(label, response_body)
+    data = {
+      request: request_body,
+      response: response_body
+    }.to_json
+
+    logger.info("#{label.to_s.upcase}: #{data}")
 
     Dir.mkdir('./log') unless Dir.exist?('./log')
     filename = "./log/#{request_body['game']['id']}.jsonl"
 
-    File.open(filename, 'a'){ |f| f.puts json_body }
+    File.open(filename, 'a'){ |f| f.puts data }
   end
 
   def request_body
