@@ -29,11 +29,11 @@ class Player
 
   def move
     return @move if defined?(@move)
-    @move = adjacent_food || nearby_food || adjacent_tail(player) || find_empty
+    @move = adjacent_food || nearby_food || adjacent_tail(player) || find_most_empty
   end
 
   def shout
-    move == adjacent_food ? "chomp!" : ""
+    (move && move == adjacent_food) ? "chomp!" : ""
   end
 
   private
@@ -93,12 +93,11 @@ class Player
     random_directions.first
   end
 
-  # def find_most_empty
-  #   locations = available_directions
-  #   available_directions.max_by do |direction|
-  #
-  #   end
-  # end
+  def find_most_empty
+    available_directions.max_by do |direction|
+      flood_fils(direction).size
+    end
+  end
 
   # def nearest_available_wall
   #   DIRECTIONS.select{ |d| available?(send(d)) }.min_by do |d|

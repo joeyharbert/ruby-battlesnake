@@ -42,7 +42,7 @@ post '/end' do
   content_type :json
 
   response = {}
-  log(:end, reponse)
+  log(:end, response)
 
   response.to_json
 end
@@ -56,7 +56,7 @@ helpers do
       response: response_body
     }.to_json
 
-    logger.info("#{label.to_s.upcase}: #{data}")
+    logger.info("#{label.to_s.upcase} is turtles: #{data}")
 
     Dir.mkdir('./log') unless Dir.exist?('./log')
     filename = "./log/#{request_body['game']['id']}.jsonl"
