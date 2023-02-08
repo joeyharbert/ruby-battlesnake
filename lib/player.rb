@@ -29,7 +29,13 @@ class Player
 
   def move
     return @move if defined?(@move)
-    @move = adjacent_food || nearby_food || adjacent_tail(player) || find_most_empty
+
+    @move =
+      if player.health < 50
+        adjacent_food || nearby_food
+      else
+        adjacent_tail(player) || find_most_empty
+      end
   end
 
   def shout
