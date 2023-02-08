@@ -94,7 +94,7 @@ class Player
   end
 
   def find_most_empty
-    fills = flood_fills(snake.head)
+    fills = flood_fills(player.head)
     logger.info("FILLS: #{fills.inspect}")
 
     fills.max_by{ |direction, spaces| spaces.size }.first
