@@ -1,15 +1,10 @@
 require 'battlesnake'
 
-# TODO:
-# prefer your own tail if it's adjacent to head (fails when food appears suddenly)
-# flood fill
-# path find to own tail
-# path find to shorter snake's heads
-
-
 class Player
   attr_reader :data, :board, :player, :logger
 
+  # Pathfinding gets exponentially slower the longer the distance. Battlesnake
+  # will only wait 500ms for your response.
   MAX_PATH_DISTANCE = 6
 
   def initialize(data, logger)
@@ -21,25 +16,15 @@ class Player
   end
 
   def play
-    {
-      move: move,
-      shout: shout
-    }
+    {move: move}
   end
 
+  ##
+  # This method needs to return your move - one of "up", "down", "left", or "right".
+  # You can use the helper methods below, build your own, or explore the
+  # battlesnake gem to see what else you can use.
   def move
-    return @move if defined?(@move)
-
-    @move =
-      if player.health < 50
-        adjacent_food || nearest_food || adjacent_tail(player) || most_empty
-      else
-        adjacent_tail(player) || most_empty
-      end
-  end
-
-  def shout
-    (move && move == adjacent_food) ? "chomp!" : ""
+    "up"
   end
 
   private
@@ -54,8 +39,6 @@ class Player
   # choosing a direction that forces a dead end.
   def most_empty
     fills = board.flood_fills(player.head, max: 10)
-    logger.info("FILLS: #{fills.inspect}")
-
     fills.max_by{ |direction, spaces| spaces.size }.first
   end
 
