@@ -1,7 +1,7 @@
 require 'battlesnake'
 
 # TODO:
-# prefer your own tail if it's adjacent to head (not working)
+# prefer your own tail if it's adjacent to head (fails when food appears suddenly)
 # flood fill
 # path find to own tail
 # path find to shorter snake's heads
@@ -32,9 +32,9 @@ class Player
 
     @move =
       if player.health < 50
-        adjacent_food || nearby_food || adjacent_tail(player) || find_most_empty
+        adjacent_food || nearest_food || adjacent_tail(player) || most_empty
       else
-        adjacent_tail(player) || find_most_empty
+        adjacent_tail(player) || most_empty
       end
   end
 
@@ -44,15 +44,25 @@ class Player
 
   private
 
-  def available_directions
-    return @available_directions if defined?(@available_directions)
-    @available_directions = board.available_directions(player.head)
+  # Returns a random direction where the next cell is empty.
+  def adjacent_empty
+    random_directions.first
   end
 
-  def random_directions
-    available_directions.shuffle
+  # Returns the direction that appears to have the most open space available.
+  # Later in the game when snakes are bigger, this is more important to avoid
+  # choosing a direction that forces a dead end.
+  def most_empty
+    fills = board.flood_fills(player.head, max: 10)
+    logger.info("FILLS: #{fills.inspect}")
+
+    fills.max_by{ |direction, spaces| spaces.size }.first
   end
 
+  # Returns the direction occupied by the given snake's tail end piece, if it
+  # is immediately adjacent to our snake's head. This can be useful for "chasing
+  # your own tail", which is a safe way to know that the space will be available
+  # on the next turn, and can theoretically be followed indefinitely.
   def adjacent_tail(snake)
     return nil if snake.body.size < 4
     tail = snake.body.last
@@ -67,16 +77,49 @@ class Player
     direction_to([snake.head, location])
   end
 
+  # Returns the direction of food, if it is immediately adjacent to our snake's head.
   def adjacent_food
     return @adjacent_food if defined?(@adjacent_food)
-    @adjacent_food = direction_to(nearest_path_to(board.food, max_distance: 1))
+    @adjacent_food = direction_to(shortest_path_to(board.food, max_distance: 1))
   end
 
-  def nearby_food
-    direction_to(nearest_path_to(board.food))
+  # Returns the direction we should start travelling to get closer to the nearest food.
+  def nearest_food
+    direction_to(shortest_path_to(board.food))
   end
 
-  def nearest_path_to(locations, max_distance: MAX_PATH_DISTANCE)
+  # Returns the direction to the nearest available wall, if we want to just hug a
+  # wall for less chance of running into things or trapping ourselves when our
+  # snake body has grown too long.
+  #
+  # NOT CURRENTLY WORKING, I don't remember why.
+  #
+  # def nearest_available_wall
+  #   DIRECTIONS.select{ |d| available?(send(d)) }.min_by do |d|
+  #     distance_to_wall(d)
+  #   end
+  # end
+
+  ###
+  # Methods below ere are helpers for the finder methods above.
+  ###
+
+  # Returns the directions we could go that are currently available (empty).
+  # Of course, this is NOT a guarantee, because each round every snake is going to
+  # move at the exact same time.
+  def available_directions
+    return @available_directions if defined?(@available_directions)
+    @available_directions = board.available_directions(player.head)
+  end
+
+  # Returns the list of available directions in random order.
+  def random_directions
+    available_directions.shuffle
+  end
+
+  # Returns the shortest path (list of directions) to any of the given locations.
+  # This is time-consuming, so to speed things up we can limit how far away we look.
+  def shortest_path_to(locations, max_distance: MAX_PATH_DISTANCE)
     Array(locations).map do |location|
       board.find_path(player.head, location, max_distance: max_distance)
     end.compact.min_by(&:size)
@@ -94,21 +137,4 @@ class Player
   def directions_to_locations(location, directions)
     directions.map{ |d| direction_to_location(location, d) }
   end
-
-  def find_empty
-    random_directions.first
-  end
-
-  def find_most_empty
-    fills = board.flood_fills(player.head, max: 10)
-    logger.info("FILLS: #{fills.inspect}")
-
-    fills.max_by{ |direction, spaces| spaces.size }.first
-  end
-
-  # def nearest_available_wall
-  #   DIRECTIONS.select{ |d| available?(send(d)) }.min_by do |d|
-  #     distance_to_wall(d)
-  #   end
-  # end
 end
