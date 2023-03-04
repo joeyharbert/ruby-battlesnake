@@ -71,18 +71,6 @@ class Player
     direction_to(shortest_path_to(board.food))
   end
 
-  # Returns the direction to the nearest available wall, if we want to just hug a
-  # wall for less chance of running into things or trapping ourselves when our
-  # snake body has grown too long.
-  #
-  # NOT CURRENTLY WORKING, I don't remember why.
-  #
-  # def nearest_available_wall
-  #   DIRECTIONS.select{ |d| available?(send(d)) }.min_by do |d|
-  #     distance_to_wall(d)
-  #   end
-  # end
-
   ###
   # Methods below ere are helpers for the finder methods above.
   ###
