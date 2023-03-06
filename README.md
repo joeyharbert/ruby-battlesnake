@@ -53,7 +53,7 @@ end
 
 ### Move in a Random AVAILABLE Direction
 
-The player class provides a method `available_directions` which only returns directions to spaces that are empty, or contain happy things like food.
+The player class provides a method `available_directions` which only returns directions to spaces that are empty, or contain happy things like food. This is not fool-proof; each player is asked for their move before any players' moves are made. So two players can decide to move into the same square, causing a collision.
 
 ~~~ruby
 def move
@@ -70,7 +70,7 @@ end
 
 ### Just Rotate in a Clockwise Circle
 
-The `data` JSON object passed to the player class contains everything that Battlesnake sends to you, to help you make your decision. `data["turn"]` is the current turn number. Using the `modulo` operator, you can just cycle through the allowed directions in any order you want. Of course, this ignores the possibilty of running into other players, but you'll last for a little while.
+The `data` JSON object passed to the player class contains everything that Battlesnake sends to you, to help you make your decision. `data["turn"]` is the current turn number. Using the `modulo` operator, you can just cycle through the allowed directions in any order you want. Of course, this ignores the possibilty of running into other players, but you'll last for a little while. You will also eventually go hungry, because enough food is unlikely to spawn in such a small area.
 
 ~~~ruby
 def move
