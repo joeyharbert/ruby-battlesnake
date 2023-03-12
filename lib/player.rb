@@ -1,4 +1,4 @@
-require 'battlesnake'
+require "battlesnake"
 
 class Player
   attr_reader :data, :board, :player, :logger
@@ -9,14 +9,14 @@ class Player
 
   def initialize(data, logger)
     @data = data
-    @board = Battlesnake::Board.new(data['board'])
-    @player = Battlesnake::Snake.new(data['you'])
+    @board = Battlesnake::Board.new(data["board"])
+    @player = Battlesnake::Snake.new(data["you"])
 
     @logger = logger
   end
 
   def play
-    {move: move}
+    { move: move }
   end
 
   ##
@@ -24,7 +24,17 @@ class Player
   # You can use the helper methods below, build your own, or explore the
   # battlesnake gem to see what else you can use.
   def move
-    "up"
+    # These are the acceptable directions.
+    directions = ["up", "down", "left", "right"]
+
+    # Number of directions
+    direction_count = directions.size
+
+    # Pick a spot on this list at random.
+    index = rand(direction_count)
+
+    # Return the direction at this spot on the list.
+    directions[index]
   end
 
   private
@@ -39,7 +49,7 @@ class Player
   # choosing a direction that forces a dead end.
   def most_empty
     fills = board.flood_fills(player.head, max: 10)
-    fills.max_by{ |direction, spaces| spaces.size }.first
+    fills.max_by { |direction, spaces| spaces.size }.first
   end
 
   # Returns the direction occupied by the given snake's tail end piece, if it
@@ -106,6 +116,6 @@ class Player
   end
 
   def directions_to_locations(location, directions)
-    directions.map{ |d| direction_to_location(location, d) }
+    directions.map { |d| direction_to_location(location, d) }
   end
 end
